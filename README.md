@@ -31,6 +31,10 @@ cd sentinelguard
 ## Usage example
 
 Running the application without arguments or with the `--help` arguments lists options.
+1. Make sure protection is disabled: `./sentinelguard --disable`
+2. Launch Apex Legends, wait until EAC initialization is completed
+3. Enable protection `./sentinelguard --enable`
+4. Load your cheat
 
 ## Release History
 
