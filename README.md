@@ -1,7 +1,7 @@
 # Sentinel Guard
 > Automatically enable and disable security measures against EAC.
 
-Very simple program to automatically configures process isolation and process tracing to minimize exposure of root owned processes to less privileged processes.
+Very simple program to automatically configure process isolation and process tracing to minimize exposure of root owned processes to less privileged processes.
 I wrote this to make it easier for me to disable my protection in order to let EAC initialize correctly but then enable it again when I want to load my fork of [zap-client](https://github.com/hir0xygen/zap-client).
 I'm looking into figuring out how to fully run Steam and Apex in a container as well, if I ever do it will be added to Sentinel Guard.
 
