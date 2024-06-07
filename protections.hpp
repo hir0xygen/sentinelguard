@@ -6,14 +6,14 @@
 #define PROTECTIONS_HPP
 #include <string>
 
-bool scanProcFor(const std::string &entry, const std::string &value);
+auto scanProcFor(const std::string &entry, const std::string &value) -> bool;
 
-bool processTracing();
+auto processTracing() -> bool;
 
-bool processTracing(bool state);
+auto processTracing(bool state) -> bool;
 
-bool processIsolation();
+auto processIsolation() -> bool;
 
-bool processIsolation(bool state);
+auto processIsolation(bool state) -> bool;
 
 #endif //PROTECTIONS_HPP

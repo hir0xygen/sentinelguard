@@ -11,7 +11,7 @@
 #include <boost/program_options.hpp>
 #include <sys/mount.h>
 
-bool scanProcFor(const std::string &entry, const std::string &value) {
+auto scanProcFor(const std::string &entry, const std::string &value) -> bool {
   std::ifstream proc_entry("/proc" + entry);
   if (!proc_entry.is_open()) {
     std::cerr << "Failed to open /proc" + entry << std::endl;
@@ -30,30 +30,28 @@ bool scanProcFor(const std::string &entry, const std::string &value) {
   return false;
 }
 
-bool processTracing() {
+auto processTracing() -> bool {
   return scanProcFor("/sys/kernel/yama/ptrace_scope", "2");
 }
 
-bool processTracing(const bool state) {
+auto processTracing(const bool state) -> bool {
   std::ofstream sysctl_file("/proc/sys/kernel/yama/ptrace_scope");
-  if (!sysctl_file) {
+  if (!sysctl_file)
     return false;
-  }
 
   sysctl_file << (state ? 2 : 0);
   sysctl_file.close();
 
-  if (sysctl_file.fail()) {
+  if (sysctl_file.fail())
     return false;
-  }
 
   return true;
 }
 
-bool processIsolation() {
+auto processIsolation() -> bool {
   return scanProcFor("/mounts", "hidepid=invisible");
 }
 
-bool processIsolation(const bool state) {
+auto processIsolation(const bool state) -> bool {
   return -1 != mount("proc", "/proc", "proc", MS_REMOUNT | MS_RELATIME | MS_NODEV | MS_NOSUID | MS_NOEXEC | MS_PRIVATE, state ? "hidepid=2" : "hidepid=0");
 }
