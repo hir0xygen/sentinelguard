@@ -13,16 +13,16 @@ namespace tc = termcolor;
 
 auto checkSentinel() -> void {
   if (processIsolation() && processTracing())
-    std::cout << tc::color<100, 210, 170> << "[SENTINEL ARMED]" << std::endl;
+    std::cout << tc::color<100, 210, 170> << "[SENTINEL ARMED]" << tc::reset << std::endl;
   else
-    std::cout << tc::color<255, 80, 110> << "[SENTINEL DISARMED]" << std::endl;
+    std::cout << tc::color<255, 80, 110> << "[SENTINEL DISARMED]" << tc::reset << std::endl;
 }
 
 auto toggleSentinel(const bool state) -> void {
   if (!processTracing(state))
-    std::cout << tc::color<255, 80, 110>  << "Failed setting protection 'process tracing' to state " << (state ? "enabled" : "disabled") << std::endl;
+    std::cout << tc::color<255, 80, 110>  << "Failed setting protection 'process tracing' to state " << (state ? "enabled" : "disabled") << tc::reset << std::endl;
   if (!processIsolation(state))
-    std::cout << tc::color<255, 80, 110>  << "Failed setting protection 'process isolation' to state " << (state ? "enabled" : "disabled") << std::endl;
+    std::cout << tc::color<255, 80, 110>  << "Failed setting protection 'process isolation' to state " << (state ? "enabled" : "disabled") << tc::reset << std::endl;
 
   checkSentinel();
 }
