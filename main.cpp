@@ -67,6 +67,11 @@ auto embeddedLaunch() -> void {
 }
 
 auto main(const int argc, char *argv[]) -> int {
+  if (geteuid() != 0) {
+    std::cerr << "Not running as root, did setuid fail?" << std::endl;
+    return -1;
+  }
+
   std::string input;
   std::string output;
 
