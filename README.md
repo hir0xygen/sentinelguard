@@ -6,12 +6,6 @@ I wrote this to make it easier for me to disable my protection in order to let E
 
 ## Installation
 
-Dependencies:
-
-```sh
-pacman -S boost
-```
-
 Building:
 
 ```sh
@@ -45,6 +39,13 @@ Now simply launch the game through Steam and launch your cheat.
 
 ## Release History
 
+* 0.0.5
+  * Remove dependency: boost libraries
+* 0.0.4
+  * Fix file ownership (bootstrap script)
+* 0.0.3
+  * Add more error logging
+  * Add root check
 * 0.0.2
   * Add Steam embedding to simplify launch 
 * 0.0.1

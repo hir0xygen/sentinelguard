@@ -1,14 +1,13 @@
-#include "protections.hpp"
-#include "termcolor.hpp"
-
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <thread>
-#include <boost/program_options.hpp>
+#include <unordered_set>
 
-namespace args = boost::program_options;
+#include "protections.hpp"
+#include "termcolor.hpp"
+
 namespace tc = termcolor;
 
 auto checkSentinel() -> void {
@@ -66,34 +65,51 @@ auto embeddedLaunch() -> void {
   exit(EXIT_SUCCESS);
 }
 
+auto parseArgs(const int argc, char *argv[]) -> std::unordered_set<std::string> {
+  std::unordered_set<std::string> args;
+  for (auto i = 1; i < argc; ++i) {
+    if (std::string arg = argv[i]; arg[0] == '-') {
+      if (arg[1] == '-') {
+        args.insert(arg.substr(2)); // long option
+      } else {
+        for (size_t j = 1; j < arg.length(); ++j)
+          args.insert(std::string(1, arg[j])); // short option
+      }
+    }
+  }
+  return args;
+}
+
+void printUsage(const char* program_name) {
+  std::cerr << "Usage: " << program_name << " [options]\n"
+            << "Allowed options:\n"
+            << "  --help           Print usage message\n"
+            << "  -c, --check      Check sentinel state\n"
+            << "  -e, --enable     Enable sentinel guarding\n"
+            << "  -d, --disable    Disable sentinel guarding\n"
+            << "  -s, --steam      For use when launching from Steam\n";
+}
+
 auto main(const int argc, char *argv[]) -> int {
   if (geteuid() != 0) {
     std::cerr << "Not running as root, did setuid fail?" << std::endl;
     return -1;
   }
 
-  std::string input;
-  std::string output;
+  const auto args = parseArgs(argc, argv);
 
-  args::options_description desc("Allowed options");
-  desc.add_options()("help", "Print usage message")("check,c", "Check sentinel state")("enable,e", "Enable sentinel guarding")("disable,d", "Disable sentinel guarding")("steam,s", "For use when launching from Steam");
-
-  args::variables_map vm;
-  store(args::command_line_parser(argc, argv).options(desc).run(), vm);
-  notify(vm);
-
-  if (vm.contains("help") || !vm.contains("enable") && !vm.contains("disable") && !vm.contains("check") && !vm.contains("steam")) {
-    std::cerr << desc << std::endl;
+  if (args.contains("help") || (!args.contains("enable") && !args.contains("e") && !args.contains("disable") && !args.contains("d") && !args.contains("check") && !args.contains("c") && !args.contains("steam") && !args.contains("s"))) {
+    printUsage(argv[0]);
     return -1;
   }
 
-  if (vm.contains("check"))
+  if (args.contains("check") || args.contains("c"))
     checkSentinel();
-  else if (vm.contains("enable"))
+  else if (args.contains("enable") || args.contains("e"))
     toggleSentinel(true);
-  else if (vm.contains("disable"))
+  else if (args.contains("disable") || args.contains("d"))
     toggleSentinel(false);
-  else if (vm.contains("steam"))
+  else if (args.contains("steam") || args.contains("s"))
     embeddedLaunch();
 
   return 0;
