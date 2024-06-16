@@ -5,7 +5,6 @@
 #include "protections.hpp"
 
 #include <csignal>
-#include <cstdio>
 #include <fstream>
 #include <iostream>
 #include <boost/program_options.hpp>

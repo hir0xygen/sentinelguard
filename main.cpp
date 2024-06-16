@@ -47,19 +47,26 @@ auto processRunning(const std::string &process_name) -> pid_t {
 }
 
 auto embeddedLaunch() -> void {
-  if (processRunning("r5apex.exe") == 0)
+  std::cout << "[SENTINEL] starting in embedded mode" << std::endl;
+  if (processRunning("r5apex.exe") == 0) {
     toggleSentinel(false);
-  else
+  } else {
+    std::cout << "[SENTINEL] Apex already running, failure" << std::endl;
     exit(EXIT_FAILURE);
+  }
 
   while (processRunning("r5apex.exe") == 0)
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+  std::cout << "[SENTINEL] Apex launched" << std::endl;
 
   std::this_thread::sleep_for(std::chrono::milliseconds(2500)); // wait for EAC to truly be done
   toggleSentinel(true);
 
   while (processRunning("r5apex.exe") != 0)
     std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+
+  std::cout << "[SENTINEL] Apex closed" << std::endl;
 
   toggleSentinel(false);
 
