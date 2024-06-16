@@ -100,18 +100,18 @@ auto main(const int argc, char *argv[]) -> int {
 
   const auto args = parseArgs(argc, argv);
 
-  if (args.contains("help") || (!args.contains("enable") && !args.contains("e") && !args.contains("disable") && !args.contains("d") && !args.contains("check") && !args.contains("c") && !args.contains("steam") && !args.contains("s"))) {
+  if (args.count("help") || (!args.count("enable") && !args.count("e") && !args.count("disable") && !args.count("d") && !args.count("check") && !args.count("c") && !args.count("steam") && !args.count("s"))) {
     printUsage(argv[0]);
     return -1;
   }
 
-  if (args.contains("check") || args.contains("c"))
+  if (args.count("check") || args.count("c"))
     checkSentinel();
-  else if (args.contains("enable") || args.contains("e"))
+  else if (args.count("enable") || args.count("e"))
     toggleSentinel(true);
-  else if (args.contains("disable") || args.contains("d"))
+  else if (args.count("disable") || args.count("d"))
     toggleSentinel(false);
-  else if (args.contains("steam") || args.contains("s"))
+  else if (args.count("steam") || args.count("s"))
     embeddedLaunch();
 
   return 0;
