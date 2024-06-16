@@ -9,6 +9,7 @@
 #include "termcolor.hpp"
 
 namespace tc = termcolor;
+const std::string program_version = "v0.0.5b";
 
 auto checkSentinel() -> void {
   if (processIsolation() && processTracing())
@@ -26,7 +27,7 @@ auto toggleSentinel(const bool state) -> void {
   checkSentinel();
 }
 
-auto apexRunning() -> pid_t {
+auto processRunning(const std::string &process_name) -> pid_t {
   auto pid = 0;
   
   for (const auto &entry: std::filesystem::__cxx11::directory_iterator("/proc")) {
@@ -37,7 +38,7 @@ auto apexRunning() -> pid_t {
     std::string command_line;
     std::getline(command_file, command_line);
 
-    if (command_line.find("r5apex.exe") != std::string::npos) {
+    if (command_line.find(process_name) != std::string::npos) {
       pid = std::stoi(entry.path().filename());
       break;
     }
@@ -46,18 +47,18 @@ auto apexRunning() -> pid_t {
 }
 
 auto embeddedLaunch() -> void {
-  if (apexRunning() == 0)
+  if (processRunning("r5apex.exe") == 0)
     toggleSentinel(false);
   else
     exit(EXIT_FAILURE);
 
-  while (apexRunning() == 0)
+  while (processRunning("r5apex.exe") == 0)
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
   std::this_thread::sleep_for(std::chrono::milliseconds(2500)); // wait for EAC to truly be done
   toggleSentinel(true);
 
-  while (apexRunning() != 0)
+  while (processRunning("r5apex.exe") != 0)
     std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
   toggleSentinel(false);
@@ -87,7 +88,8 @@ void printUsage(const char* program_name) {
             << "  -c, --check      Check sentinel state\n"
             << "  -e, --enable     Enable sentinel guarding\n"
             << "  -d, --disable    Disable sentinel guarding\n"
-            << "  -s, --steam      For use when launching from Steam\n";
+            << "  -s, --steam      For use when launching from Steam\n\n"
+            << "sentinelguard - " << program_version << "\n";
 }
 
 auto main(const int argc, char *argv[]) -> int {
