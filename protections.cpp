@@ -5,9 +5,9 @@
 #include "protections.hpp"
 
 #include <csignal>
+#include <cstring>
 #include <fstream>
 #include <iostream>
-#include <boost/program_options.hpp>
 #include <sys/mount.h>
 
 auto scanProcFor(const std::string &entry, const std::string &value) -> bool {
