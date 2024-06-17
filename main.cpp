@@ -9,7 +9,7 @@
 #include "termcolor.hpp"
 
 namespace tc = termcolor;
-const std::string program_version = "v0.0.5c";
+const std::string program_version = "v0.0.6";
 
 auto checkSentinel() -> void {
   if (processIsolation() && processTracing())
